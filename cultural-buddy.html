@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cultural Buddy Finder — Yilin Zhu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #FAF7F2;
+      --warm-white: #FDF9F4;
+      --sand: #E8DDD0;
+      --terracotta: #C4714A;
+      --brown: #6B4F3A;
+      --brown-light: #9C7A63;
+      --text: #2E1F14;
+      --text-muted: #8B6F5C;
+      --accent: #7A6E9E;
+      --accent-light: #C8C2DC;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(250,247,242,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(180,150,120,0.15);
+    }
+
+    .nav-name {
+      font-family: 'Lora', serif;
+      font-size: 17px;
+      color: var(--brown);
+      text-decoration: none;
+    }
+
+    .nav-back {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--terracotta); }
+
+    /* HERO */
+    .hero {
+      padding: 140px 48px 80px;
+      background: linear-gradient(160deg, #EEEDFE 0%, var(--cream) 65%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(122,110,158,0.15), transparent);
+      top: -100px; right: -100px;
+      pointer-events: none;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .pill {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(122,110,158,0.35);
+      color: var(--accent);
+      background: rgba(122,110,158,0.08);
+    }
+
+    .hero h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(36px, 5vw, 64px);
+      color: var(--brown);
+      line-height: 1.12;
+      margin-bottom: 20px;
+    }
+
+    .hero-summary {
+      font-size: 17px;
+      line-height: 1.8;
+      color: var(--text-muted);
+      max-width: 560px;
+      font-weight: 300;
+      margin-bottom: 48px;
+    }
+
+    .hero-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 40px;
+      max-width: 540px;
+    }
+
+    .meta-item-label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .meta-item-value {
+      font-size: 14px;
+      color: var(--brown);
+    }
+
+    /* CONTENT */
+    .content {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 80px 48px;
+    }
+
+    .section { margin-bottom: 72px; }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .section h2 {
+      font-family: 'Lora', serif;
+      font-size: 28px;
+      color: var(--brown);
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    .section p {
+      font-size: 15px;
+      line-height: 1.85;
+      color: var(--text-muted);
+      font-weight: 300;
+      margin-bottom: 16px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+
+    /* CALLOUT */
+    .callout {
+      background: var(--warm-white);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+
+    .callout p {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: var(--brown);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* CHALLENGES */
+    .challenges { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+
+    .challenge-card {
+      background: var(--warm-white);
+      border: 1px solid var(--sand);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .challenge-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(122,110,158,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .challenge-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--brown);
+      margin-bottom: 4px;
+    }
+
+    .challenge-desc {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* INSIGHTS */
+    .insights-list { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+
+    .insight-item {
+      display: flex;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 18px;
+      background: var(--warm-white);
+      border-radius: 10px;
+      border: 1px solid var(--sand);
+    }
+
+    .insight-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .insight-text {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* PERSONA */
+    .persona-card {
+      background: var(--warm-white);
+      border: 1px solid var(--sand);
+      border-radius: 16px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 24px;
+      align-items: start;
+      margin-top: 20px;
+    }
+
+    .persona-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .persona-name {
+      font-family: 'Lora', serif;
+      font-size: 18px;
+      color: var(--brown);
+      margin-bottom: 4px;
+    }
+
+    .persona-role {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .persona-needs { list-style: none; }
+
+    .persona-needs li {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      padding: 4px 0 4px 16px;
+      position: relative;
+    }
+
+    .persona-needs li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      font-size: 8px;
+      color: var(--accent);
+      top: 7px;
+    }
+
+    .persona-note {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: rgba(122,110,158,0.08);
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--brown-light);
+      font-style: italic;
+      grid-column: 1 / -1;
+    }
+
+    /* DESIGN GOALS */
+    .goals-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .goal-card {
+      background: var(--warm-white);
+      border: 1px solid var(--sand);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .goal-icon { font-size: 20px; margin-bottom: 10px; }
+
+    .goal-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--brown);
+      margin-bottom: 6px;
+    }
+
+    .goal-desc {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* IA DIAGRAM */
+    .ia-diagram {
+      margin-top: 24px;
+      background: var(--warm-white);
+      border: 1px solid var(--sand);
+      border-radius: 16px;
+      padding: 32px 24px;
+      overflow-x: auto;
+    }
+
+    .ia-root {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0;
+    }
+
+    .ia-node-root {
+      background: var(--accent);
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .ia-connector-down {
+      width: 1px;
+      height: 24px;
+      background: var(--sand);
+      margin: 0 auto;
+    }
+
+    .ia-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      position: relative;
+    }
+
+    .ia-tabs::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 12.5%; right: 12.5%;
+      height: 1px;
+      background: var(--sand);
+    }
+
+    .ia-tab-col { display: flex; flex-direction: column; align-items: center; }
+
+    .ia-connector-col {
+      width: 1px;
+      height: 20px;
+      background: var(--sand);
+    }
+
+    .ia-node-tab {
+      background: white;
+      border: 1.5px solid var(--accent-light);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-align: center;
+      width: 100%;
+      margin-bottom: 0;
+    }
+
+    .ia-children { display: flex; flex-direction: column; align-items: center; gap: 0; width: 100%; }
+
+    .ia-node-child {
+      background: var(--cream);
+      border: 1px solid var(--sand);
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-align: center;
+      width: 90%;
+      margin-top: 8px;
+    }
+
+    .ia-node-deep {
+      background: rgba(122,110,158,0.1);
+      border: 1px solid rgba(122,110,158,0.25);
+      color: var(--accent);
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      text-align: center;
+      width: 85%;
+      margin-top: 6px;
+    }
+
+    /* PROCESS STEPS */
+    .process-steps { margin-top: 20px; }
+
+    .process-step {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 16px;
+      margin-bottom: 8px;
+      align-items: start;
+    }
+
+    .step-num {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid var(--sand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-body { padding-bottom: 24px; border-bottom: 1px solid var(--sand); }
+    .process-step:last-child .step-body { border-bottom: none; }
+
+    .step-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--brown);
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    .step-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--cream);
+      border: 1px solid var(--sand);
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* SCREENS */
+    .screens-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .screen-card {
+      background: linear-gradient(160deg, #EEEDFE, #D8D4F4);
+      border-radius: 16px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      border: 1px solid rgba(122,110,158,0.2);
+    }
+
+    .screen-emoji { font-size: 36px; }
+
+    .screen-label {
+      font-size: 13px;
+      color: var(--brown);
+      font-weight: 500;
+    }
+
+    /* BOTTOM NAV */
+    .case-nav {
+      border-top: 1px solid var(--sand);
+      padding: 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .case-nav a {
+      font-size: 14px;
+      color: var(--terracotta);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: gap 0.2s;
+    }
+
+    .case-nav a:hover { gap: 12px; }
+
+    /* FOOTER */
+    footer {
+      background: var(--brown);
+      color: rgba(255,255,255,0.6);
+      padding: 40px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-name {
+      font-family: 'Lora', serif;
+      font-size: 17px;
+      color: white;
+      text-decoration: none;
+    }
+
+    .footer-note { font-size: 12px; }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .hero { padding: 110px 24px 60px; }
+      .content { padding: 60px 24px; }
+      .hero-meta-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .goals-grid { grid-template-columns: 1fr; }
+      .persona-card { grid-template-columns: 1fr; }
+      .screens-grid { grid-template-columns: 1fr; }
+      .ia-tabs { grid-template-columns: repeat(2, 1fr); }
+      .case-nav { padding: 40px 24px; }
+      footer { flex-direction: column; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-name">Yilin Zhu</a>
+    <a href="index.html#work" class="nav-back">← Back to work</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-meta">
+      <span class="pill">Mobile app</span>
+      <span class="pill">UX Design</span>
+      <span class="pill">Academic project</span>
+      <span class="pill">2024</span>
+    </div>
+    <h1>Cultural Buddy Finder</h1>
+    <p class="hero-summary">Helping international students find peers who share their cultural traditions — so they can plan small celebrations, stay connected to home, and share meaningful moments while studying abroad.</p>
+    <div class="hero-meta-grid">
+      <div>
+        <div class="meta-item-label">My role</div>
+        <div class="meta-item-value">UX Designer</div>
+      </div>
+      <div>
+        <div class="meta-item-label">Team</div>
+        <div class="meta-item-value">Yilin Zhu & Julia Zheng</div>
+      </div>
+      <div>
+        <div class="meta-item-label">Context</div>
+        <div class="meta-item-value">Cornell University — academic project</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <div class="section reveal">
+      <div class="section-label">Problem statement</div>
+      <h2>The challenge</h2>
+      <p>International students often feel disconnected from their cultural traditions while studying abroad. Academic schedules conflict with holidays, and finding others to celebrate with can be difficult — especially without an existing social network in a new country.</p>
+      <div class="callout">
+        <p>"How might we help international students find peers who share their traditions, so they can celebrate meaningfully — even far from home?"</p>
+      </div>
+    </div>
+
+    <div class="section reveal">
+      <div class="section-label">User research</div>
+      <h2>Three key challenges</h2>
+      <div class="challenges">
+        <div class="challenge-card">
+          <div class="challenge-num">1</div>
+          <div>
+            <div class="challenge-title">Disconnection during cultural holidays</div>
+            <div class="challenge-desc">Students struggle to recreate meaningful traditions abroad without family, familiar foods, or community context.</div>
+          </div>
+        </div>
+        <div class="challenge-card">
+          <div class="challenge-num">2</div>
+          <div>
+            <div class="challenge-title">Coordination friction</div>
+            <div class="challenge-desc">Planning even small celebrations requires significant effort across schedules and locations — most students give up before even starting.</div>
+          </div>
+        </div>
+        <div class="challenge-card">
+          <div class="challenge-num">3</div>
+          <div>
+            <div class="challenge-title">Lack of structured support in existing apps</div>
+            <div class="challenge-desc">General social media platforms don't support culturally-focused matching or celebration planning in any structured way.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section reveal">
+      <div class="section-label">Research insights</div>
+      <h2>What users told us</h2>
+      <div class="insights-list">
+        <div class="insight-item">
+          <div class="insight-dot"></div>
+          <div class="insight-text">Users want clear continuity between planning and reflecting — the app should feel like one journey, not disconnected screens.</div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-dot"></div>
+          <div class="insight-text">They expect a visible history of events and saved content — memory and reflection matter as much as planning.</div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-dot"></div>
+          <div class="insight-text">Matching must feel transparent and trustworthy — users won't connect with strangers unless they understand why they're being matched.</div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-dot"></div>
+          <div class="insight-text">Features that duplicate existing social apps must provide clear added value — otherwise users will just use Instagram.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section reveal">
+      <div class="section-label">Persona</div>
+      <h2>Who we designed for</h2>
+      <div class="persona-card">
+        <div class="persona-avatar">👩‍🎓</div>
+        <div>
+          <div class="persona-name">Aera Kang</div>
+          <div class="persona-role">Cornell international student · Seoul, South Korea</div>
+          <ul class="persona-needs">
+            <li>Find other students who share her cultural traditions</li>
+            <li>Plan small celebrations that fit into a busy academic schedule</li>
+            <li>Feel emotionally connected to her home culture</li>
+            <li>Share meaningful moments with family abroad</li>
+          </ul>
+        </div>
+        <div class="persona-note">
+          Aera doesn't need a large event-planning platform. She needs a simple, emotionally supportive tool that helps her connect, celebrate briefly, and reflect meaningfully.
+        </div>
+      </div>
+    </div>
+
+    <div class="section reveal">
+      <div class="section-label">Design goals</div>
+      <h2>Our north stars</h2>
+      <div class="goals-grid">
+        <div class="goal-card">
+          <div class="goal-icon">🌏</div>
+          <div class="goal-title">Meaningful connection</div>
+          <div class="goal-desc">Help international students find peers who genuinely share their traditions — not just their country of origin.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">🔒</div>
+          <div class="goal-title">Clarity and trust</div>
+          <div class="goal-desc">Provide clear feedback and system status in every interaction so users always know what's happening.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">⚡</div>
+          <div class="goal-title">Reduce friction</div>
+          <div class="goal-desc">Make organizing small celebrations quick and simple — three taps, not thirty minutes.</div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-icon">📖</div>
+          <div class="goal-title">Continuity & reflection</div>
+          <div class="goal-desc">Allow users to revisit past celebrations and share meaningful recaps with people back home.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section reveal">
+      <div class="section-label">Information architecture</div>
+      <h2>How the app is structured</h2>
+      <p>The app is organized around four tabs, each representing a stage of the cultural celebration journey — from finding people, to planning, sharing, and managing relationships.</p>
+      <div class="ia-diagram">
+        <div class="ia-root">
+          <div class="ia-node-root">Cultural Buddy Finder</div>
+        </div>
+        <div class="ia-connector-down"></div>
+        <div class="ia-tabs">
+          <div class="ia-tab-col">
+            <div class="ia-connector-col"></div>
+            <div class="ia-node-tab">Match</div>
+            <div class="ia-children">
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-child">Filter by tradition</div>
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-child">Match results</div>
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-deep">Buddy profile</div>
+            </div>
+          </div>
+          <div class="ia-tab-col">
+            <div class="ia-connector-col"></div>
+            <div class="ia-node-tab">Plan</div>
+            <div class="ia-children">
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-child">New celebration</div>
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-child">Invite buddies</div>
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-deep">Confirm & set time</div>
+            </div>
+          </div>
+          <div class="ia-tab-col">
+            <div class="ia-connector-col"></div>
+            <div class="ia-node-tab">Share</div>
+            <div class="ia-children">
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-child">Add recap</div>
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-child">Voice & photos</div>
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-deep">Share or save</div>
+            </div>
+          </div>
+          <div class="ia-tab-col">
+            <div class="ia-connector-col"></div>
+            <div class="ia-node-tab">Buddies</div>
+            <div class="ia-children">
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-child">My buddies list</div>
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-child">Past events</div>
+              <div class="ia-connector-col"></div>
+              <div class="ia-node-deep">Profile view</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section reveal">
+      <div class="section-label">Major screens</div>
+      <h2>The final product</h2>
+      <p>Four screens covering the full journey — matching with cultural peers, planning a celebration, sharing a recap, and managing your buddies.</p>
+      <div class="screens-grid">
+        <div class="screen-card">
+          <div class="screen-emoji">🤝</div>
+          <div class="screen-label">Matching</div>
+        </div>
+        <div class="screen-card">
+          <div class="screen-emoji">🗓️</div>
+          <div class="screen-label">Planning</div>
+        </div>
+        <div class="screen-card">
+          <div class="screen-emoji">📸</div>
+          <div class="screen-label">Sharing</div>
+        </div>
+        <div class="screen-card">
+          <div class="screen-emoji">👥</div>
+          <div class="screen-label">Buddies</div>
+        </div>
+      </div>
+      <p style="margin-top: 16px; font-size: 13px; font-style: italic;">Replace these placeholders with screenshots from your Figma prototype.</p>
+    </div>
+
+  </div>
+
+  <div class="case-nav">
+    <a href="ithaca-soap.html">← Previous: Ithaca Soap</a>
+    <a href="index.html#work">All projects →</a>
+  </div>
+
+  <footer>
+    <a href="index.html" class="footer-name">Yilin Zhu</a>
+    <div class="footer-note">Designed & built with care · 2024</div>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
