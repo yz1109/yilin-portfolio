@@ -268,7 +268,9 @@ nav {
 /* Hero backgrounds for case study pages */
 .hero-soap {
   padding: 140px 48px 80px;
-  background: linear-gradient(160deg, #E8F4ED 0%, var(--cream) 60%);
+  background: linear-gradient(160deg, rgba(232, 244, 237, 0.9) 0%, rgba(250, 247, 242, 0.9) 60%), url('/images/eco-friendly.jpg');
+  background-size: cover;
+  background-position: center;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -277,7 +279,9 @@ nav {
 
 .hero-buddy {
   padding: 140px 48px 80px;
-  background: linear-gradient(160deg, #EEEDFE 0%, var(--cream) 65%);
+  background: linear-gradient(160deg, rgba(238, 237, 254, 0.9) 0%, rgba(250, 247, 242, 0.9) 65%), url('/images/cross-cultural.webp');
+  background-size: cover;
+  background-position: center;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -432,11 +436,15 @@ section {
 }
 
 .case-thumb-soap {
-  background: linear-gradient(135deg, #E8F4ED 0%, #C8DDD0 100%);
+  background: linear-gradient(135deg, rgba(232, 244, 237, 0.8) 0%, rgba(200, 221, 208, 0.8) 100%), url('/images/eco-friendly.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 .case-thumb-buddy {
-  background: linear-gradient(135deg, #EEEDFE 0%, #D8D4F4 100%);
+  background: linear-gradient(135deg, rgba(238, 237, 254, 0.8) 0%, rgba(216, 212, 244, 0.8) 100%), url('/images/cross-cultural.webp');
+  background-size: cover;
+  background-position: center;
 }
 
 .case-thumb-decoration {
@@ -1037,6 +1045,38 @@ section {
   font-weight: 500;
 }
 
+.screenshots-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 24px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.screenshot-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.screenshot-item img {
+  width: 100%;
+  height: auto;
+  max-width: 280px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 0 auto;
+}
+
+.screenshot-label {
+  font-size: 14px;
+  color: var(--brown);
+  font-weight: 500;
+  text-align: center;
+}
+
 /* ==========================================
    CASE NAVIGATION
    ========================================== */
@@ -1124,6 +1164,7 @@ footer {
   .goals-grid { grid-template-columns: 1fr; }
   .persona-card { grid-template-columns: 1fr; }
   .screens-grid { grid-template-columns: 1fr; }
+  .screenshots-grid { grid-template-columns: repeat(2, 1fr); }
   .ia-tabs { grid-template-columns: repeat(2, 1fr); }
   
   .case-nav { padding: 40px 24px; }
